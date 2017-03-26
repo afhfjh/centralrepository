@@ -1,0 +1,11 @@
+<html>
+  <body>
+    <h1>Open Page in a New Window</h1>
+    <script type="text/javascript">
+      var thisUrl = document.location.toString();
+      var newPage = thisUrl.substring(thisUrl.indexOf("?",0)+1);
+      var openWin = window.open(newPage,"_blank","resizable=yes,scrollbars=yes");
+      openWin.focus();
+    </script>
+  </body>
+</html>

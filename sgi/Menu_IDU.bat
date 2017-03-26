@@ -1,0 +1,1 @@
+javaws http://192.168.3.102:9001/forms/frmservlet?config=menu_idu_ws
