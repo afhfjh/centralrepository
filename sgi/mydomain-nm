@@ -1,0 +1,160 @@
+#!/bin/sh
+#
+# chkconfig:   345 85 15
+# description: per domain Oracle Weblogic Node Manager service init script
+ 
+### BEGIN INIT INFO
+# Provides: jtest-dom1213-nodemanager
+# Required-Start: $network $local_fs
+# Required-Stop:
+# Should-Start:
+# Should-Stop:
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: per domain Oracle Weblogic Node Manager service.
+# Description: Starts and stops per domain Oracle Weblogic Node Manager.
+### END INIT INFO
+ 
+. /etc/rc.d/init.d/functions
+ 
+#### BEGIN CUSTOM ENV
+DOMAIN_HOME="/u01/app/oracle/config/domains/frsdomain"
+MW_HOME=/u01/app/oracle/product/12.2.1
+JAVA_HOME=/usr/java/jdk1.8.0_121
+ORA_OWNER=oracle
+
+LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.1/lib:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64/server
+#### END CUSTOM ENV
+#PROCESS_STRING="^.*$DOMAIN_HOME.*weblogic.NodeManager.*"
+#PROGRAM_START="su -c $DOMAIN_HOME/bin/startNodeManager.sh oracle"
+#PROGRAM_START_WLS="$DOMAIN_HOME/bin/startWebLogic.sh"
+#PROGRAM_START_WLS="su -c $DOMAIN_HOME/bin/startWebLogic.sh oracle"
+#PROGRAM_START_WLS_FORMS="su -s "$DOMAIN_HOME/bin/startManagedWebLogic.sh  $WLS_FORMS" - oracle"
+#PROGRAM_START_WLS_REPORTS="su -c $DOMAIN_HOME/bin/startManagedWebLogic.sh  WLS_REPORTS oracle"
+#PROGRAM_START_WLS_STOP="su -c $DOMAIN_HOME/bin/stopWebLogic.sh oracle"
+#PROGRAM_STOP_WLS_FORMS="su -c `$DOMAIN_HOME/bin/stopManagedWebLogic.sh WLS_FORMS` oracle"
+#PROGRAM_STOP_WLS_REPORTS="su -c `$DOMAIN_HOME/bin/stopManagedWebLogic.sh WLS_REPORTS` oracle"
+NODEMANAGER_DIR=$DOMAIN_HOME/nodemanager
+NODEMANAGER_LOCKFILE="$NODEMANAGER_DIR/nodemanager.log.lck"
+OUT_FILE="$NODEMANAGER_DIR/nodemanager.out"
+OUT_FILE_WLS="$NODEMANAGER_DIR/weblogic.out"
+OUT_FILE_WLS_FORMS="$NODEMANAGER_DIR/WLS_FORMS.out"
+OUT_FILE_WLS_REPORTS="$NODEMANAGER_DIR/WLS_REPORTS.out"
+
+ 
+SERVICE_NAME=`/bin/basename $0`
+LOCKFILE="/var/lock/subsys/$SERVICE_NAME"
+ 
+RETVAL=0
+ 
+start() {
+        OLDPID=`/usr/bin/pgrep -f $PROCESS_STRING`
+        if [ ! -z "$OLDPID" ]; then
+            echo "$SERVICE_NAME is already running (pid $OLDPID) !"
+            echo
+            exit
+        fi
+        echo -n $"Starting $SERVICE_NAME ... "
+        echo "`date` Starting $SERVICE_NAME ... " > $OUT_FILE 2>&1 
+        echo "`date` Starting $SERVICE_NAME ... " > $OUT_FILE_WLS 2>&1 
+        export MW_HOME
+        export JAVA_HOME
+        export LD_LIBRARY_PATH
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/startNodeManager.sh " >> $OUT_FILE 2>&1 &
+        sleep 60
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/startWebLogic.sh " >> $OUT_FILE 2>&1 &
+        sleep 60
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/startManagedWebLogic.sh WLS_FORMS " >> $OUT_FILE_WLS_FORMS 2>&1 &
+	sleep 60
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/startManagedWebLogic.sh WLS_REPORTS " >> $OUT_FILE_WLS_REPORTS 2>&1 &
+ 
+        RETVAL=$?
+        if [ $RETVAL -eq 0 ] ; then
+          wait_for "socket listener started on port"
+        else
+          echo "FAILED: $RETVAL. Please check $OUT_FILE for more information."
+        fi
+        echo
+}
+ 
+wait_for() {
+    res=$(cat "$OUT_FILE" | fgrep -c "$1")
+    count=60
+    while [[ ! $res -gt 0 ]] && [[ $count -gt 0 ]]
+    do
+        sleep 1
+        count=$(($count - 1))
+        res=$(cat "$OUT_FILE" | fgrep -c "$1")
+    done
+    res=$(cat "$OUT_FILE" | fgrep -c "$1")
+    if [ ! $res -gt 0 ]; then
+        echo "FAILED or took too long time to start. Please check $OUT_FILE for more information."
+    else
+        echo "OK"
+        touch $LOCKFILE
+    fi
+}
+ 
+stop() {
+        echo -n $"Stopping $SERVICE_NAME ... "
+	
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/stopManagedWebLogic.sh WLS_FORMS " >> $OUT_FILE_WLS_FORMS 2>&1 &
+	sleep 30
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/stopManagedWebLogic.sh WLS_REPORTS " >> $OUT_FILE_WLS_REPORTS 2>&1 &
+        sleep 60
+        su $ORA_OWNER -c "$DOMAIN_HOME/bin/stopWebLogic.sh " >> $OUT_FILE 2>&1 &
+	
+        #$PROGRAM_STOP_WLS_FORMS >> $OUT_FILE_WLS_FORMS 2>&1  &
+	#$PROGRAM_STOP_WLS_REPORTS >> $OUT_FILE_WLS_REPORTS 2>&1  &
+        #$PROGRAM_START_WLS_STOP >> $OUT_FILE_WLS 2>&1  &
+        
+        OLDPID=`/usr/bin/pgrep -f $PROCESS_STRING`
+        if [ "$OLDPID" != "" ]; then
+            echo -n "(pid $OLDPID) "
+            /bin/kill -TERM $OLDPID
+ 
+            RETVAL=$?
+            echo "OK"
+            /bin/rm -f $NODEMANAGER_LOCKFILE
+            [ $RETVAL -eq 0 ] && rm -f $LOCKFILE
+        else
+            /bin/echo "$SERVICE_NAME is stopped"
+        fi
+        echo
+}
+ 
+restart() {
+        stop
+        sleep 10
+        start
+}
+ 
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        stop
+        ;;
+  restart|force-reload|reload)
+        restart
+        ;;
+  condrestart|try-restart)
+        [ -f $LOCKFILE ] && restart
+        ;;
+  status)
+        OLDPID=`/usr/bin/pgrep -f $PROCESS_STRING`
+        if [ "$OLDPID" != "" ]; then
+            /bin/echo "$SERVICE_NAME is running (pid: $OLDPID)"
+        else
+            /bin/echo "$SERVICE_NAME is stopped"
+        fi
+        echo
+        RETVAL=$?
+        ;;
+  *)
+        echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+        exit 1
+esac
+ 
+exit $RETVAL
