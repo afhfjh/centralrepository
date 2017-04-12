@@ -1,0 +1,582 @@
+INTALADORES:
+-----------
+/home/instaladores
+
+vi ~/fr12c.env
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/12.2.1
+export MW_HOME=$ORACLE_HOME
+export WLS_HOME=$MW_HOME/wlserver
+export WL_HOME=$WLS_HOME
+export DOMAIN_BASE=$ORACLE_BASE/config/domains
+export DOMAIN_HOME=$DOMAIN_BASE/mydomain
+export JAVA_HOME=/opt/jdk1.8.0_40
+export DOMAIN_HOME=$ORACLE_BASE/config/domains/frsdomain
+export NLS_LANG=AMERICAN_AMERICA.WE8ISO8859P15
+export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.1/lib:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64/server 
+export FORMS_PATH=/u01/app/oracle/product/12.2.1/forms:/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/forms1:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu:/u01/idu/imagen
+export REPORTS_PATH=/u01/app/oracle/product/12.2.1/reports/templates:/u01/app/oracle/product/12.2.1/reports/printers:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu:/u01/idu/imagen
+
+export PATH=$JAVA_HOME/bin:$PATH
+
+/u01/app/oracle/product/12.2.1/wlserver/common/bin/wlst.sh
+connect("weblogic","Pa55w0rd", "localhost:7001")
+createReportsToolsInstance(instanceName='rep_tools_wls_reports_weblogic12c', machine='AdminServerMachine')
+createReportsServerInstance(instanceName='rep_wls_reports_weblogic12c', machine='AdminServerMachine')
+start('rep_tools_wls_reports_weblogic12c')
+start('rep_wls_reports_weblogic12c')
+exit()
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwnetwork.conf
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsToolsComponent/rep_tools_wls_reports_weblogic12c/rwnetwork.conf
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwnetwork.conf
+/u01/app/oracle/product/12.2.1/reports/conf/rwnetwork.conf
+
+--Vi de los anteriores 
+  reemplazar 
+  
+  <!--namingService name="Cos" host="%NAMING_HOST%" port="%NAMING_PORT%"/-->
+
+  por
+ 
+  <namingService name="cos" host="127.0.0.1" port="14021"/>
+ 
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwserver.conf
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwserver.conf
+
+--Vi de los anteriores
+ <!--security id="rwJaznSec" class="oracle.reports.server.RWJAZNSecurity"/-->
+ <!--job jobType="report" engineId="rwEng" securityId="rwJaznSec"/-->
+ <!--job jobType="rwurl" engineId="rwURLEng"/-->
+ 
+   <environment id="default">
+      <envVariable name="REPORTS_PATH" value="/u01/app/oracle/product/12.2.1/reports/templates:/u01/app/oracle/product/12.2.1/reports/printers:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu:/u01/idu/imagen"/>
+   </environment>
+   
+   <engine id="rwEng" class="oracle.reports.engine.EngineImpl" maxEngine="1" minEngine="1" engLife="50" defaultEnvId="default" >
+
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwserver.conf /u01/app/oracle/product/12.2.1/reports/conf/ 
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwserver.conf /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsToolsComponent/
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties
+/u01/app/oracle/product/12.2.1/reports/conf/rwservlet.properties
+
+--Vi de los anteriores
+   <server>rep_wls_reports_weblogic12c</server>
+   <singlesignon>no</singlesignon>
+   <inprocess>yes</inprocess>
+   <webcommandaccess>L2</webcommandaccess>
+   
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsToolsComponent/rep_tools_wls_reports_weblogic12c/
+
+TRANSFERIR icons.java - > /u01/app/oracle/product/12.2.1/forms/java
+
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/formsweb.cfg /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/formsweb.old
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/formsweb.cfg
+--Vi de los anteriores
+
+heartbeat=5
+networkRetries=10
+baseHTMLjpi=/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/server/basejpi.htm
+archive=jacob.jar,frmall.jar,frmwebutil.jar,icons.jar
+[menu_idu]
+WebUtilArchive=/u01/app/oracle/product/12.2.1/forms/java/frmwebutil.jar,/u01/app/oracle/product/12.2.1/forms/java/jacob.jar
+WebUtilLogging=off
+WebUtilLoggingDetail=normal
+WebUtilErrorMode=Alert
+WebUtilDispatchMonitorInterval=5
+WebUtilTrustInternal=true
+WebUtilMaxTransferSize=16384
+width=1200
+height=900
+form=impuestos.fmx
+buffer_records=NO
+debug_messages=NO
+array=YES
+query_only=NO
+quiet=NO
+render=YES
+separateframe=TRUE
+colorScheme=red
+
+[webutil]
+WebUtilArchive=/u01/app/oracle/product/12.2.1/forms/java/frmwebutil.jar,/u01/app/oracle/product/12.2.1/forms/java/jacob.jar
+
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/default.env /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/default.old
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/default.env 
+--Vi de los anteriores
+
+CLASSPATH=/u01/app/oracle/product/12.2.1/jlib/frmbipc.jar:/u01/app/oracle/product/12.2.1/forms/j2ee/frmsrv.jar:/u01/app/oracle/product/12.2.1/forms/provision/frmconfig.jar:/u01/app/oracle/product/12.2.1/jlib/ldapjclnt11.jar:/u01/app/oracle/product/12.2.1/jlib/debugger.jar:/u01/app/oracle/product/12.2.1/jlib/ewt3.jar:/u01/app/oracle/product/12.2.1/oracle_common/modules/oracle.bali.share/share.jar:/u01/app/oracle/product/12.2.1/jlib/utj.jar:/u01/app/oracle/product/12.2.1/jlib/zrclient.jar:/u01/app/oracle/product/12.2.1/reports/jlib/rwrun.jar:/u01/app/oracle/product/12.2.1/forms/java/frmwebutil.jar:/u01/app/oracle/product/12.2.1/oracle_common/modules/oracle.jps/jps-manifest.jar:/u01/app/oracle/product/12.2.1/oracle_common/modules/oracle.dms/dms.jar:/u01/app/oracle/product/12.2.1/oracle_common/modules/oracle.odl/ojdl.jar:/u01/app/oracle/product/12.2.1/oracle_common/modules/javax.management.j2ee.jar:/u01/app/oracle/product/12.2.1/forms/java/jacob.jar
+
+FORMS_INSTANCE=/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1
+FORMS_PATH=/u01/app/oracle/product/12.2.1/forms:/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu
+REPORTS_PATH=/u01/app/oracle/product/12.2.1/reports/templates:/u01/app/oracle/product/12.2.1/reports/printers:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu:/u01/idu/imagen
+FORMS_TIMEOUT=60
+
+CONFIGURE_COMPONENT_PATH=/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsToolsComponent/rep_tools_wls_reports_weblogic12c
+COMPONENT_CONFIG_PATH=/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/ReportsToolsComponent/rep_tools_wls_reports_weblogic12c
+
+TMP=/u01/idu/web_reps
+NLS_DATE_FORMAT=DD-MM-YYYY
+NLS_NUMERIC_CHARACTERS=.,
+#NLS_LANG=AMERICAN_AMERICA.WE8MSWIN1252
+NLS_LANG=SPANISH_SPAIN.WE8MSWIN1252
+NLS_NCHAR_CONV_EXCP=FALSE
+SGI_PATH=/u01/idu/src
+SGI_MENU=/u01/idu/menu
+SGI_REPORTE=/u01/idu/src
+SGI_PATHDELO=/tmp
+SGI_PATH_HELP=/u01/idu/help
+SGI_DAD=http://192.168.3.100:6057/SGI/
+SGI_REP_SERVER=rep_wls_reports_weblogic12c
+SGI_REP_URL=http://192.168.3.100:9002/reports/rwservlet/getjobid
+SGI_UBICREPO=/u01/idu/rpt/
+SGI_DIREWEIAS=http://192.168.3.100:7001/web_reps/
+SGI_PATHDITEIAS=/tmp/web_reps
+SGI_TEMPWELO=/tmp
+SGI_TEMPBADA=/tmp
+SGI_PHEX2BIN=/u01/idu/sql/Hex2bin-2.3/hex2bin
+#Creado en el servidor de Base de Datos (tiene conexión con Weblogic a /tmp/web_reps/)
+SGI_WELOCAIN=/weblogic
+#Creado en el servidor de Weblogic (tiene conexión con la Base de Datos)
+SGI_BADACAIN=/BaseDatos
+
+cp /u01/app/oracle/config/domains/frsdomain/servers/WLS_FORMS/tmp/_WL_user/formsapp_12.2.1/wblalg/config/oracle/forms/registry/Registry.dat /u01/app/oracle/config/domains/frsdomain/servers/WLS_FORMS/tmp/_WL_user/formsapp_12.2.1/wblalg/config/oracle/forms/registry/Registry.old
+
+/u01/app/oracle/config/domains/frsdomain/servers/WLS_FORMS/tmp/_WL_user/formsapp_12.2.1/wblalg/config/oracle/forms/registry/Registry.dat
+--Vi de los anteriores
+
+#default.icons.iconpath=/forms/java
+default.icons.iconpath=http://192.168.3.102:7001/icon_gif/
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/tnsnames.ora
+--Vi de los anteriores
+
+DESA12C =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)
+                 (HOST = 192.168.3.99)
+                 (PORT = 1521)
+      )
+    )
+    (CONNECT_DATA =
+      (SID = desa12c)
+    )
+  )
+
+DESA =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)
+                 (HOST = 192.168.3.96)
+                 (PORT = 1521)
+      )
+    )
+    (CONNECT_DATA =
+      (SID = desa)
+    )
+  )
+
+DESAOLD =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)
+                 (HOST = 192.168.60.34)
+                 (PORT = 1521)
+      )
+    )
+    (CONNECT_DATA =
+      (SID = desa)
+    )
+  )
+
+
+ 
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/admin/resource/E/fmrweb.res /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/admin/resource/E/fmrweb.old
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/admin/resource/US/fmrweb.res /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/admin/resource/US/fmrweb.old 
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/admin/resource/E/fmrweb.res
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/admin/resource/US/fmrweb.res
+
+--Vi de los anteriores
+
+9    : 0 : "Tab"            	: 1  : "Próximo Campo"
+9    : 1 : "Shift+Tab"      	: 2  : "Campo Anterior"
+116  : 0 : "F5"             	: 3  : "Clear Field"
+38   : 0 : "Up"             	: 6  : "Arriba"
+40   : 0 : "Down"           	: 7  : "Abajo"
+33   : 0 : "PageUp"         	: 12 : "Página Abajo"
+34   : 0 : "PageDown"       	: 13 : "Página Arriba"
+69   : 2 : "Ctrl+E"         	: 22 : "Editar Campo"
+10   : 0 : "Return"         	: 27 : "Return"
+115  : 2 : "Ctrl+F4"        	: 32 : "Salir"
+75   : 2 : "Ctrl+K"         	: 35 : "Mostrar Ayuda de Teclas"
+83   : 2 : "Ctrl+S"         	: 36 : "Commit"
+118  : 1 : "Shift+F7"       	: 61 : "Next Primary Key"
+117  : 0 : "F6"             	: 65 : "Inserta Registro"
+115  : 1 : "Shift+F4"       	: 62 : "Limpiar Registro"
+117  : 1 : "Shift+F6"       	: 63 : "Borrar Registro"
+119  : 0 : "F8"             	: 77 : "Ejecuta Consulta"
+1005 : 0 : "Down"           	: 67 : "Registro Siguiente"
+1004 : 0 : "Up"             	: 68 : "Registro Anterior"
+118  : 0 : "F7"             	: 76 : "Modo Consulta/Cancela Consulta"
+66   : 2 : "Ctrl+B"         	: 70 : "Block Menu"
+34   : 2 : "Ctrl+PageDown"  : 71 : "Próximo Bloque"
+33   : 2 : "Ctrl+PageUp"    	: 72 : "Anterior Bloque"
+69   : 3 : "Shift+Ctrl+E"   	: 78 : "Mostrar Error"
+80   : 2 : "Ctrl+P"         	: 79 : "Imprimir"
+121  : 0 : "F10"            	: 36 : "Guardar"
+112  : 0 : "F1"             	: 30 : "Ayuda"
+120  : 0 : "F9"             	: 29 : "Lista de Valores"
+123  : 0 : "F12"            	: 83 : "Validación de Operario"
+122  : 3 : "Shift+Ctrl+F11" : 82 : "Validación de Coordinador sin Colas"
+
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/server/*.htm /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/forms1/server
+
+cp -avr /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/forms1/admin
+cp -avr /u01/app/oracle/product/12.2.1/forms/templates/resource /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/forms1/admin
+
+vi /u01/app/oracle/config/domains/frsdomain/reports/bin/rwconverter.sh
+--Este archivo contiene la información del reports tools configurado con el reports server
+REPORTS_PATH=/u01/app/oracle/product/12.2.1/reports/templates:/u01/app/oracle/product/12.2.1/reports/printers:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu:/u01/idu/imagen
+
+/u01/app/oracle/product/12.2.1/ohs/templates/conf/httpd.conf
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/OHS/instances/ohs1/httpd.conf
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/OHS/ohs1/httpd.conf
+
+--Vi de los anteriores
+
+Timeout 7200
+
+cp /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/deployment-plans/formsapp/12.2.1/plan.xml /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/deployment-plans/formsapp/12.2.1/plan.old
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/deployment-plans/formsapp/12.2.1/plan.xml
+
+--Vi de los anteriores y adicione
+   <variable>
+      <name>SessionConfig_timeout</name>
+      <value>7200</value>
+  </variable>
+
+--Locate line "<uri>WEB-INF/web.xml</uri>" in plan.xml and add the following lines below      
+	  
+	  <variable-assignment>
+        <name>SessionConfig_timeout</name>
+        <xpath>/web-app/session-config/session-timeout</xpath>
+      </variable-assignment>
+
+ 
+. ~/fr12c.env
+
+
+echo ------------------------------------------------------INICIO WL--------------------------------------------------------------------
+nohup $DOMAIN_HOME/bin/startNodeManager.sh > /dev/null 2>&1 &
+nohup $DOMAIN_HOME/bin/startWebLogic.sh > /dev/null 2>&1 &
+sleep 120
+nohup $DOMAIN_HOME/bin/startManagedWebLogic.sh WLS_FORMS > /dev/null 2>&1 &
+nohup $DOMAIN_HOME/bin/startManagedWebLogic.sh WLS_REPORTS > /dev/null 2>&1 &
+sleep 2
+/u01/app/oracle/product/12.2.1/wlserver/common/bin/wlst.sh
+connect("weblogic","Pa55w0rd", "localhost:7001")
+start('rep_tools_wls_reports_weblogic12c')
+start('rep_wls_reports_weblogic12c')
+exit()
+nohup /u01/app/oracle/config/domains/frsdomain/reports/bin/namingservice.sh 14021 > /dev/null 2>&1 &
+
+echo ------------------------------------------------------PARAR WL----------------------------------------------------------------------
+nohup $DOMAIN_HOME/bin/stopManagedWebLogic.sh WLS_FORMS > /dev/null 2>&1 &
+nohup $DOMAIN_HOME/bin/stopManagedWebLogic.sh WLS_REPORTS > /dev/null 2>&1 &
+nohup $DOMAIN_HOME/bin/stopWebLogic.sh > /dev/null 2>&1 &
+
+echo ------------------------------------------------------CONSULTA WL------------------------------------------------------------------
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/listWebLogicServers.sh
+
+echo ------------------------------------------------------LOGS WL------------------------------------------------------------------
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/logs
+
+$DOMAIN_HOME/startWebLogic.sh &
+
+
+http://192.168.3.100:9002/reports/rwservlet/showjobs
+http://192.168.3.100:7001/em/faces/targetauth/emasLogin?target=%2FDomain_frsdomain%2Ffrsdomain&type=weblogic_domain
+http://192.168.3.100:7001/console/login/LoginForm.jsp
+http://192.168.3.100:9001/forms/frmservlet?config=menu_idu
+
+COMPILACION
+-----------
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/bin/frmcmp.sh module=lib_utilidades.pll module_type=library userid=OW_VALPROD/OW_VALPROD@DESA12C Compile_All=yes
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/bin/frmcmp.sh module=m_def.mmb module_type=menu userid=OW_VALPROD/OW_VALPROD@DESA12C Compile_All=yes
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/bin/frmcmp.sh module=impuestos.fmb module_type=form userid=OW_VALPROD/OW_VALPROD@DESA12C Compile_All=yes
+/u01/app/oracle/config/domains/frsdomain/reports/bin/rwconverter.sh userid=OW_VALPROD/OW_VALPROD@DESA12C batch=yes source=rcra.rdf stype=rdffile dtype=repfile overwrite=yes compile_all=yes
+
+
+# yum install samba
+
+SAMBA
+-----
+[smbprueba]
+  valid users = smbuser1 @smbusers
+  write list = smbuser1 @smbusers
+  path = /tmp/web_reps
+  writeable = yes
+  create mask = 0775
+
+[ss01cc02]
+  valid users = smbuser1 @smbusers
+  write list = smbuser1 @smbusers
+  path = /ss01cc02
+  writeable = yes
+  create mask = 0775
+
+[ss03cc01]
+  valid users = smbuser1 @smbusers
+  write list = smbuser1 @smbusers
+  path = /ss03cc01
+  writeable = yes
+  create mask = 0775
+  
+  
+Se procede a crear los usuarios con las siguientes credenciales:
+
+smbuser1/N1c4b4r0
+smbuser2/N1c4b4r0
+
+Los dos bajo el grupo
+
+smbusers
+
+En el archivo smb.conf en /etc/samba se destinó un contenedor llamado smbprueba, el cual es el que apunta al /tmp/web_reps
+
+Se realizó prueba con el servidor 100; sin embargo y una vez ya validado, se desmontó de este servidor, y se procedió a montar en la unidad /weblogic del servidor 192.168.3.99
+
+Las credenciales fueron provistas por infraestructura.
+
+Esto fué validado desde un servidor windows, adicionando una conexion hacia la unidad de red con las credenciales repectivas
+Comando para hacer el montaje de las unidades respectivamente
+# mount -t cifs -o rw,username=dev1,password=dev1 //192.168.0.190/devshare /u01/dev1 
+
+copiar jacob.jar a /u01/app/oracle/product/12.2.1/forms/java
+
+--Para generar Certificado
+/opt/jdk1.8.0_40/bin/keytool -genkey -keyalg rsa -alias SmartCertificado
+Ayuda:
+C:\Program Files\Java\jdk1.8.0\bin\keytool -genkey -keyalg rsa -alias MyCert
+Enter keystore password: *********
+What is your first and last name?
+[Unknown]: XXXXXXX YYY
+What is the name of your organizational unit?
+[Unknown]: Example Software
+What is the name of your organization?
+[Unknown]: New Technology Company
+What is the name of your City or Locality?
+[Unknown]: Cupertino
+What is the name of your State or Province?
+[Unknown]: CA
+What is the two-letter country code for this unit?
+[Unknown]: US
+Is <CN=XXXXXXX YYY, OU=Example Software, O=New Technology Company,
+                L=Cupertino, ST=CA, C=US> correct?
+[no]: yes
+
+Enter key password for <MyCert>
+(RETURN if same as keystore password): *********
+
+--Para ver el request
+/opt/jdk1.8.0_40/bin/keytool -certreq -alias SmartCertificado 
+
+--Para adicionar certificado
+/opt/jdk1.8.0_40/bin/jarsigner /u01/app/oracle/product/12.2.1/forms/java/jacob.jar SmartCertificado
+
+--Para verificar certificado
+/opt/jdk1.8.0_40/bin/jarsigner -verify -verbose -certs /u01/app/oracle/product/12.2.1/forms/java/jacob.jar
+
+
+copiar jacob-1.18-M2-x64.dll a /u01/app/oracle/product/12.2.1/forms/webutil/win64 y jacob-1.18-M2-x86.dll a /u01/app/oracle/product/12.2.1/forms/webutil/win32
+
+/*******************************************************************************************AYUDA DE FIRMAR JAR *********************************************************************************************************/
+RSA-signed applets are supported to make deployment of signed applets easier. However, signing applets through RSA is still difficult for most novice applet developers and prevents them from taking full advantage of this Java Plug-in feature. This document provides step-by-step instructions for signing applets using RSA certificates, allowing novice applet developers to sign their applets without having to wade through the many complex security issues involved.
+
+Signing applets requires the following :
+
+Signing tools
+An RSA keypair and a certificate chain for the public keys
+The applet and all its class files, bundled as JAR files
+Signing Tools
+Java Plug-in supports the format of the following tools for signing applets using RSA:
+
+jarsigner: Signing tool shipped as part of the Java SDK
+signtool: Signing tool provided by Netscape for signing applets in Navigator/Communicator. For more details on the sign tool and downloading it, see NSS Security Tools.
+Getting RSA Certificates
+RSA certificates may be purchased from a Certificate Authority (CA) that supports RSA, such as VeriSign and Thawte. Some CAs, such as VeriSign, implement different protocols for issuing certificates, depending on the particular signing tool you are using.
+
+Getting Certificates With Jarsigner
+Jarsigner is known to work with VeriSign and Thawte certificates and may work with Certificate Authorties. To use Jarsigner to sign applets using RSA certificates, obtain code signing certificates for Java from VeriSign, Thawte, or similar certificates from other CAs. During the process of certificate enrollment, you will be asked to provide the certificate signing request (CSR). To generate the CSR, follow these steps:
+
+Use keytool to generate an RSA keypair (using the "-genkey -keyalg rsa" options). Make sure your distinguished name contains all the components mandated by VeriSign/Thawte. For example:
+C:\Program Files\Java\jdk1.8.0\bin\keytool -genkey -keyalg rsa -alias MyCert
+Enter keystore password: *********
+What is your first and last name?
+[Unknown]: XXXXXXX YYY
+What is the name of your organizational unit?
+[Unknown]: Example Software
+What is the name of your organization?
+[Unknown]: New Technology Company
+What is the name of your City or Locality?
+[Unknown]: Cupertino
+What is the name of your State or Province?
+[Unknown]: CA
+What is the two-letter country code for this unit?
+[Unknown]: US
+Is <CN=XXXXXXX YYY, OU=Example Software, O=New Technology Company,
+                L=Cupertino, ST=CA, C=US> correct?
+[no]: yes
+
+Enter key password for <MyCert>
+(RETURN if same as keystore password): *********
+Use "keytool -certreq" to generate a certification signing request. Copy the result and paste it into the VeriSign/Thawte webform. For example, 
+C:\Program Files\Java\jdk1.8.0\bin\keytool -certreq -alias MyCert
+
+Enter keystore password:  *********
+-----BEGIN NEW CERTIFICATE REQUEST-----
+MIIBtjCCAR8CAQAwdjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRIwE
+AYDVQQHEwlDdXBlcnRpbm8xGTAXBgNVBAoTEFN1biBNaWNyb3N5c3RlbX
+MxFjAUBgNVBAsTDUphdmEgU29mdHdhcmUxEzARBgNVBAMTClN0YW5sZXk
+gSG8wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBALTgU8PovA4y59eb
+oPjY65BwCSc/zPqtOZKJlaW4WP+UhmebE+T2Mho7P5zXjGf7elo3tV5uI
+3vzgGfnhgpf73EoMow8EJhly4w/YsXKqeJEqqvNogzAD+qUv7Ld6dLOv0
+CO5qvpmBAO6mfaI1XAgx/4xU/6009jVQe0TgIoocB5AgMBAAGgADANBgk
+qhkiG9w0BAQQFAAOBgQAWmLrkifKiUYtd4ykhBtPWSwW/IKkgyfIuNMML
+dF1DH8neSnXf3ZLI32f2yXvs7u3/xn6chnTXh4HYCJoGYOAbB3WNbAoQR
+i6u6TLLOvgv9pMNUo6v1qB0xly1faizjimVYBwLhOenkA3Bw7S8UIVfdv
+84cO9dFUGcr/Pfrl3GtQ==
+-----END NEW CERTIFICATE REQUEST-----
+The CA (for example, VeriSign/Thawte) will send you a certificate reply (chain) by email. Copy the chain and store it in a file. Use "keytool -import" to import the chain into your keystore. For example:
+C:\Program Files\Java\jdk1.6.0\bin\keytool -import -alias MyCert -file VSSStanleyNew.cer
+Your RSA certificate and its supporting chain have been validated and imported into your keystore. You are now ready to use jarsigner to sign your JAR file.
+/******************************************************************************************* FIN AYUDA DE FIRMAR JAR *********************************************************************************************************/
+
+
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/server/webutil.cfg
+
+--Vi de los anteriores
+install.syslib.0.0.7.1=jacob-1.18-M2-x86.dll|167424|1.18-M2|true
+install.syslib.0.1.7.1=jacob-1.18-M2-x64.dll|204800|1.18-M2|true
+
+transfer.database.enabled=TRUE
+transfer.appsrv.enabled=TRUE
+transfer.appsrv.workAreaRoot=c:\temp
+transfer.appsrv.accessControl=TRUE
+#List transfer.appsrv.read.<n> directories
+transfer.appsrv.read.1=c:\temp
+#List transfer.appsrv.write.<n> directories
+transfer.appsrv.write.1=c:\temp
+
+BlockAllowHeartBeat=TRUE
+
+
+ /opt/jdk1.8.0_40/bin/keytool -genkey -alias Smartkey -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 365 -keypass Pa55w0rd -keystore identity.jks -storepass Pa55w0rd
+ 
+ /opt/jdk1.8.0_40/bin/keytool -export -alias Smartkey -file smartweblogic.cer -keystore identity.jks -storepass Pa55w0rd
+ 
+ /u01/app/oracle/product/12.2.1/forms/templates/scripts/sign_webutil.sh /u01/app/oracle/product/12.2.1/forms/java/jacob.jar
+
+ vi /u01/app/oracle/product/12.2.1/forms/templates/scripts/sign_webutil.sh
+ 
+ /opt/jdk1.8.0_40/bin/jarsigner -keystore /u01/app/oracle/keystore/identity.jks -storepass Pa55w0rd jacob.jar Smartkey
+ /opt/jdk1.8.0_40/bin/jarsigner -keystore /u01/app/oracle/keystore/identity.jks -storepass Pa55w0rd frmwebutil.jar Smartkey
+ 
+DN_CN="Andres Holguin"
+DN_OU="Desarrollo"
+DN_O="SmartTMT"
+DN_C=CO
+#
+# Give your keystore file
+KEYSTORE=/u01/app/oracle/keystore/identity.jks
+
+KEYSTORE_PASSWORD=Pa55w0rd
+
+JAR_KEY=Pa55w0rd
+
+JAR_KEY_PASSWORD=Pa55w0rd
+
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/server/base.jnlp
+vi anterior
+
+ /usr/java/jdk1.8.0_121/bin/jarsigner -keystore /u01/app/oracle/keystore/identity.jks -storepass Pa55w0rd jacob.jar Smartkey
+ 
+
+/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/server/base.jnlp
+https://java.com/en/download/faq/signed_code.xml
+
+
+/usr/java/jdk1.8.0_121/bin/keytool -genkey -alias Smartkey -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 365 -keypass Pa55w0rd -keystore identity.jks -storepass Pa55w0rd
+
+vi /u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/instances/forms1/bin/sign_webutil.sh
+
+DN_CN="Andres Holguin"
+DN_OU="Desarrollo"
+DN_O=SmartTMT
+DN_C=CO
+#
+# Give your keystore file
+KEYSTORE=/u01/app/identity.jks
+#
+# If KEYSTORE already exists, old KEYSTORE_PASSWORD for the keystore file must
+# be correctly given here. If KEYSTORE does not already exist, any password
+# given here will be taken for the new KEYSTORE file to be created.
+#
+# *** Remove the text after the '=' below and replace with your password. ***
+KEYSTORE_PASSWORD=Pa55w0rd
+#
+# Give your alias key here.
+#
+JAR_KEY=Pa55w0rd
+#
+# Key Password for the given key to be used for signing.
+#
+# *** Remove the text after the '=' below and replace with your password. ***
+JAR_KEY_PASSWORD=Pa55w0rd
+
+#
+# Number of days before this certificate expires
+#
+VALIDDAYS=3600
+
+/usr/java/jdk1.8.0_121/bin/keytool -genkey -alias Smartkey -keyalg RSA -keysize 2048 -sigalg SHA256withRSA -validity 365 -keypass Pa55w0rd -keystore identity.jks -storepass Pa55w0rd
+/usr/java/jdk1.8.0_121/bin/keytool -genkey -dname "CN=$DN_CN, OU=$DN_OU, O=$DN_O, C=$DN_C" \
+        -alias $JAR_KEY -keypass $JAR_KEY_PASSWORD -keystore $KEYSTORE \
+        -storepass $KEYSTORE_PASSWORD -validity $VALIDDAYS
+		
+#keytool -genkey -keyalg rsa -keystore <keystore_filename> -alias <alias_name> -keysize 2048
+
+/u01/app/oracle/product/12.2.1/oracle_common/jdk/bin/keytool -genkey -keyalg rsa -keystore /u01/idu/identity.jks -alias Smartkey -keysize 2048
+Introduzca la contraseña del almacén de claves:
+Volver a escribir la contraseña nueva:
+¿Cuáles son su nombre y su apellido?
+  [Unknown]:  Andres Holguin
+¿Cuál es el nombre de su unidad de organización?
+  [Unknown]:  Desarrollo
+¿Cuál es el nombre de su organización?
+  [Unknown]:  SmartTMT
+¿Cuál es el nombre de su ciudad o localidad?
+  [Unknown]:  Cali
+¿Cuál es el nombre de su estado o provincia?
+  [Unknown]:  Valle
+¿Cuál es el código de país de dos letras de la unidad?
+  [Unknown]:  CO
+¿Es correcto CN=Andres Holguin, OU=Desarrollo, O=SmartTMT, L=Cali, ST=Valle, C=CO?
+  [no]:  si
+
+Introduzca la contraseña de clave para <Smartkey>
+        (INTRO si es la misma contraseña que la del almacén de claves):
+Volver a escribir la contraseña nueva:
+
+#keytool -certreq -file certreq.csr -keystore <keystore_filename> -alias <alias_name>
+
+/u01/app/oracle/product/12.2.1/oracle_common/jdk/bin/keytool -certreq -file /u01/idu/certreq.csr -keystore /u01/idu/identity.jks -alias Smartkey

@@ -1,0 +1,90 @@
+hostname weblogic12C.smarttmt.com
+
+vi /etc/hostname
+
+weblogic12C.smarttmt.com
+
+vi /etc/hosts
+
+192.168.3.102 weblogic12C.smarttmt.com weblogic12c
+
+binutils-2.23.52.0.1
+compat-libcap1-1.10
+compat-libstdc++-33-3.2.3.x86_64
+compat-libstdc++-33-3.2.3.i686
+gcc-4.8.2
+gcc-c++-4.8.2
+glibc-2.17.x86_64
+glibc-2.17.i686
+glibc-devel-2.17.x86_64
+libaio-0.3.109.x86_64
+libaio-devel-0.3.109.x86_64
+libgcc-4.8.2.x86_64
+libgcc-4.8.2.i686
+libstdc++-4.8.2.x86_64
+libstdc++-4.8.2.i686
+libstdc++-devel-4.8.2.x86_64
+ksh
+make-3.82
+sysstat-10.1.5
+numactl-2.0.9.x86_64
+numactl-devel-2.0.9.x86_64
+motif-2.3.4-7.x86_64
+motif-devel-2.3.4-7.x86_64
+ 
+mkdir /usr/java
+cd /usr/java
+cp /opt/jdk-8u121-linux-x64.rpm .
+rpm -ivh jdk-8u121-linux-x64.rpm
+export JAVA_HOME=/usr/java/jdk1.8.0_121
+export PATH=$PATH:/usr/java/jdk1.8.0_121/bin:/usr/java/jdk1.8.0_121/jre/bin
+
+/usr/sbin/groupadd oinstall
+/usr/sbin/useradd -g oinstall oracle
+/usr/bin/passwd oracle
+
+mkdir -p /u01/app/oracle/product/12.2.1
+mkdir -p /u01/app/oracle/config/domains
+mkdir -p /u01/app/oracle/config/applications
+chown -R oracle:oinstall /u01
+chmod -R 775 /u01/
+
+vi ~/fr12c.env
+export ORACLE_BASE=/u01/app/oracle
+export ORACLE_HOME=$ORACLE_BASE/product/12.2.1
+export MW_HOME=$ORACLE_HOME
+export WLS_HOME=$MW_HOME/wlserver
+export WL_HOME=$WLS_HOME
+export DOMAIN_BASE=$ORACLE_BASE/config/domains
+export DOMAIN_HOME=$DOMAIN_BASE/mydomain
+export JAVA_HOME=/usr/java/jdk1.8.0_121
+export DOMAIN_HOME=$ORACLE_BASE/config/domains/frsdomain
+export NLS_LANG=AMERICAN_AMERICA.WE8ISO8859P15
+export LD_LIBRARY_PATH=/u01/app/oracle/product/12.2.1/lib:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64/server:/u01/app/oracle/product/12.2.1/oracle_common/jdk/jre/lib/amd64/native_threads
+export FORMS_PATH=/u01/app/oracle/product/12.2.1/forms:/u01/app/oracle/config/domains/frsdomain/config/fmwconfig/components/FORMS/forms1:/u01/idu/src/template:/u01/idu/sql/lib:/u01/idu/menu
+export PATH=$PATH:/usr/java/jdk1.8.0_121/bin:/usr/java/jdk1.8.0_121/jre/bin
+
+. ~/fr12c.env
+
+con root
+unzip fmw_12.2.1.2.0_infrastructure_Disk1_1of1.zip
+chmod 775 fmw_12.2.1.2.0_infrastructure.jar
+chown oracle:oinstall fmw_12.2.1.2.0_infrastructure.jar
+
+$JAVA_HOME/bin/java -jar fmw_12.2.1.2.0_infrastructure.jar
+
+$ORACLE_HOME/oracle_common/common/bin/config.sh
+
+export DOMAIN_HOME=$ORACLE_BASE/config/domains/wldomain
+mkdir -p $DOMAIN_HOME/servers/AdminServer/security
+echo "username=weblogic" > $DOMAIN_HOME/servers/AdminServer/security/boot.properties
+echo "password=Pa55w0rd" >> $DOMAIN_HOME/servers/AdminServer/security/boot.properties
+
+https://oracle-base.com/articles/12c/oracle-forms-and-reports-12c-create-new-domain
+
+https://thecattlecrew.net/2016/12/17/oracle-forms-reports-12-2-1-2-0-create-and-configure-on-the-oel-7-2-server/
+ln -s /usr/lib64/libXm.so.4.0.4 /usr/lib64/libXm.so.3
+
+/u01/app/oracle/product/12.2.1/OPatch/opatch prereq CheckConflictAgainstOHWithDetail -ph ./
+/u01/app/oracle/product/12.2.1/OPatch/opatch apply
+

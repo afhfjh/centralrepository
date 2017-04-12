@@ -1,0 +1,280 @@
+find /home/oracle/Middleware/Oracle_Home/ -name 'startManagedWebLogic.sh'
+find /dir/path/look/up -name "dir-name-here"
+find /home/oracle/Middleware/Oracle_Home/ -name AdminServer
+--Encuentra Archivos
+find . -type f -name tureceta* 
+--Encuentra Directorios
+find . -type d -name tureceta* 
+find . -type d -name WLS_FORMS
+
+
+WL12C
+cd /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer
+mkdir security
+vi boot.properties
+username=weblogic
+password=Pa55w0rd
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/startWebLogic.sh
+cd /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/WLS_FORMS
+mkdir security
+cd /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/WLS_REPORTS
+mkdir security
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/security/boot.properties /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/WLS_FORMS/security/
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/security/boot.properties /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/WLS_REPORTS/security/
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/security/boot.properties /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/security/
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/security/boot.properties /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/rep_wls_reports_weblogic12c/security
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/security/boot.properties /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/ohs1/security
+
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/formsweb.cfg /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/formsweb.old
+vi /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/formsweb.cfg
+baseHTML=/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/forms1/server/base.htm
+# System parameter: base HTML file for use with Sun's Java Plug-In
+#baseHTMLjpi=basejpi.htm
+baseHTMLjpi=/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/forms1/server/basejpi.htm
+archive=jacob.jar,frmall.jar,frmwebutil.jar,icons.jar
+[menu_idu]
+WebUtilArchive=jacob.jar,frmwebutil.jar
+WebUtilLogging=off
+WebUtilLoggingDetail=normal
+WebUtilErrorMode=Alert
+WebUtilDispatchMonitorInterval=5
+WebUtilTrustInternal=true
+WebUtilMaxTransferSize=16384
+width=1200
+height=900
+form=impuestos.fmx
+buffer_records=NO
+debug_messages=NO
+array=YES
+query_only=NO
+quiet=NO
+render=YES
+separateframe=TRUE
+colorScheme=red
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/default.env /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/default.old
+vi /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/default.env
+FORMS_INSTANCE=/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/forms1
+FORMS_PATH=/home/oracle/Oracle/Middleware/Oracle_Home/forms:/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/instances/forms1:/home/oracle/idu/src/template:/home/oracle/idu/sql/lib:/home/oracle/idu/menu
+TMP=/home/oracle/idu/web_reps
+NLS_DATE_FORMAT=DD-MM-YYYY
+NLS_NUMERIC_CHARACTERS=.,
+#NLS_LANG=AMERICAN_AMERICA.WE8MSWIN1252
+NLS_LANG=SPANISH_SPAIN.WE8MSWIN1252
+NLS_NCHAR_CONV_EXCP=FALSE
+SGI_PATH=/home/oracle/idu/src
+SGI_MENU=/home/oracle/idu/menu
+SGI_REPORTE=/home/oracle/idu/src
+SGI_PATHDELO=/tmp
+SGI_PATH_HELP=/home/oracle/idu/help
+SGI_DAD=http://192.168.3.167:6057/SGI/
+SGI_REP_SERVER=rep_wls_reports_weblogic_asinst_1
+SGI_REP_URL=http://192.168.3.167:9002/reports/rwservlet/getjobid
+SGI_UBICREPO=/home/oracle/idu/rpt
+SGI_DIREWEIAS=http://192.168.3.167:7001/web_reps/
+SGI_PATHDITEIAS=/home/oracle/idu/web_reps
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/oracle/forms/registry/Registry.dat /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/oracle/forms/registry/Registry.old
+vi /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_FORMS/applications/formsapp_12.2.1/config/oracle/forms/registry/Registry.dat 
+default.icons.iconpath=/forms/java
+vi /home/oracle/Oracle/Middleware/Oracle_Home/network/admin/tnsnames.ora
+vi /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/tnsnames.ora
+DESA =
+  (DESCRIPTION =
+    (ADDRESS_LIST =
+      (ADDRESS = (PROTOCOL = TCP)
+                 (HOST = 192.168.3.99)
+                 (PORT = 1521)
+      )
+    )
+    (CONNECT_DATA =
+      (SID = desa)
+    )
+  )
+cp /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource/E/fmrweb.res /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource/E/fmrweb.old
+cd /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource/US/fmrweb.res /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource/US/fmrweb.old
+vi /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource/E/fmrweb.res
+vi /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource/US/fmrweb.res
+9    : 0 : "Tab"            	: 1  : "Próximo Campo"
+9    : 1 : "Shift+Tab"      	: 2  : "Campo Anterior"
+116  : 0 : "F5"             	: 3  : "Clear Field"
+38   : 0 : "Up"             	: 6  : "Arriba"
+40   : 0 : "Down"           	: 7  : "Abajo"
+33   : 0 : "PageUp"         	: 12 : "Página Abajo"
+34   : 0 : "PageDown"       	: 13 : "Página Arriba"
+69   : 2 : "Ctrl+E"         	: 22 : "Editar Campo"
+10   : 0 : "Return"         	: 27 : "Return"
+115  : 2 : "Ctrl+F4"        	: 32 : "Salir"
+75   : 2 : "Ctrl+K"         	: 35 : "Mostrar Ayuda de Teclas"
+83   : 2 : "Ctrl+S"         	: 36 : "Commit"
+118  : 1 : "Shift+F7"       	: 61 : "Next Primary Key"
+117  : 0 : "F6"             	: 65 : "Inserta Registro"
+115  : 1 : "Shift+F4"       	: 62 : "Limpiar Registro"
+117  : 1 : "Shift+F6"       	: 63 : "Borrar Registro"
+119  : 0 : "F8"             	: 77 : "Ejecuta Consulta"
+1005 : 0 : "Down"           	: 67 : "Registro Siguiente"
+1004 : 0 : "Up"             	: 68 : "Registro Anterior"
+118  : 0 : "F7"             	: 76 : "Modo Consulta/Cancela Consulta"
+66   : 2 : "Ctrl+B"         	: 70 : "Block Menu"
+34   : 2 : "Ctrl+PageDown"  : 71 : "Próximo Bloque"
+33   : 2 : "Ctrl+PageUp"    	: 72 : "Anterior Bloque"
+69   : 3 : "Shift+Ctrl+E"   	: 78 : "Mostrar Error"
+80   : 2 : "Ctrl+P"         	: 79 : "Imprimir"
+121  : 0 : "F10"            	: 36 : "Guardar"
+112  : 0 : "F1"             	: 30 : "Ayuda"
+120  : 0 : "F9"             	: 29 : "Lista de Valores"
+123  : 0 : "F12"            	: 83 : "Validación de Operario"
+122  : 3 : "Shift+Ctrl+F11" : 82 : "Validación de Coordinador sin Colas"
+
+cp /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/config/*.htm /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/forms1/server
+--base.htm
+--basejpi.htm
+--webutilbase.htm
+--webutiljpi.htm
+cp -avr /home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/resource /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/forms1/admin
+
+TRANSFERIR icons.java - > /home/oracle/Oracle/Middleware/Oracle_Home/forms/java
+
+./Middleware/Oracle_Home/wlserver/common/bin/wlst.sh
+connect("weblogic","Pa55w0rd", "localhost:7001")
+createReportsToolsInstance(instanceName='rep_tools_wls_reports_weblogic12c', machine='AdminServerMachine')
+createReportsServerInstance(instanceName='rep_wls_reports_weblogic12c', machine='AdminServerMachine')
+start('rep_tools_wls_reports_weblogic12c')
+start('rep_wls_reports_weblogic12c')
+exit()
+
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwnetwork.conf
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsToolsComponent/rep_tools_wls_reports_weblogic12c/rwnetwork.conf
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwnetwork.conf
+./Oracle/Middleware/Oracle_Home/reports/conf/rwnetwork.conf
+
+--Vi de los anteriores
+ <namingService name="cos" host="127.0.0.1" port="14021">
+
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwserver.conf
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwserver.conf
+cp ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwserver.conf ./Oracle/Middleware/Oracle_Home/reports/conf/
+cp ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/rwserver.conf ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsToolsComponent/
+
+--Vi de los anteriores
+ <!--security id="rwJaznSec" class="oracle.reports.server.RWJAZNSecurity"/-->
+ <!--job jobType="report" engineId="rwEng" securityId="rwJaznSec"/-->
+ <!--job jobType="rwurl" engineId="rwURLEng"/-->
+
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties
+./Oracle/Middleware/Oracle_Home/reports/conf/rwservlet.properties
+cp ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent/rep_wls_reports_weblogic12c/
+cp ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsToolsComponent/rep_tools_wls_reports_weblogic12c/
+
+--Vi de los anteriores
+   <server>rep_wls_reports_weblogic12c</server>
+   <singlesignon>no</singlesignon>
+   <inprocess>yes</inprocess>
+   <webcommandaccess>L2</webcommandaccess>
+   
+http://192.168.3.167:7001/console/login/LoginForm.jsp
+http://192.168.3.167:7001/em/faces/targetauth/emasLogin;ADMINCONSOLESESSION=eezp1JC_cQNrVM5PuIyKHy5YSebun1hfGs0fbVDFX4BvgA0fXWN1!-221112904?target=%2FDomain_FRdomain%2FFRdomain&type=weblogic_domain
+http://192.168.3.167:9001/forms/frmservlet?config=menu_idu
+http://192.168.3.167:9002/reports/rwservlet/showjobs
+
+  
+echo ------------------------------------------------------INICIO WL--------------------------------------------------------------------
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/startNodeManager.sh > /dev/null 2>&1 &
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/startWebLogic.sh > /dev/null 2>&1 &
+sleep 120
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/startManagedWebLogic.sh WLS_FORMS > /dev/null 2>&1 &
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/startManagedWebLogic.sh WLS_REPORTS > /dev/null 2>&1 &
+sleep 2
+/home/oracle/Oracle/Middleware/Oracle_Home/wlserver/common/bin/wlst.sh
+connect("weblogic","Pa55w0rd", "localhost:7001")
+start('rep_tools_wls_reports_weblogic12c')
+start('rep_wls_reports_weblogic12c')
+exit()
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/reports/bin/namingservice.sh 14021 > /dev/null 2>&1 &
+
+echo ------------------------------------------------------PARAR WL----------------------------------------------------------------------
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/stopManagedWebLogic.sh WLS_FORMS > /dev/null 2>&1 &
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/stopManagedWebLogic.sh WLS_REPORTS > /dev/null 2>&1 &
+nohup /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/stopWebLogic.sh > /dev/null 2>&1 &
+
+echo ------------------------------------------------------CONSULTA WL------------------------------------------------------------------
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/listWebLogicServers.sh
+
+echo ------------------------------------------------------LOGS WL------------------------------------------------------------------
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/logs
+
+ps -elf | grep java
+kill -9 PID
+
+vi ~/fr11g.env
+export MW_HOME=/home/oracle/Oracle/Middleware
+export WLS_HOME=$MW_HOME/Oracle_Home/wlserver
+export FR_HOME=$MW_HOME/Oracle_Home
+export FR_INST=$MW_HOME/Oracle_Home
+export DOMAIN_NAME=FRdomain
+export DOMAIN_HOME=$MW_HOME/Oracle_Home/user_projects/domains/$DOMAIN_NAME
+export NLS_LANG=AMERICAN_AMERICA.WE8ISO8859P15
+export LD_LIBRARY_PATH=/home/oracle/Oracle/Middleware/Oracle_Home/lib:/home/oracle/Oracle/Middleware/Oracle_Home/oracle_common/jdk/jre/lib/amd64:/home/oracle/Oracle/Middleware/Oracle_Home/oracle_common/jdk/jre/lib/amd64/server:/home/oracle/Oracle/Middleware/Oracle_Home/oracle_common/jdk/jre/lib/amd64/native_threads 
+export FORMS_PATH=/home/oracle/Oracle/Middleware/Oracle_Home/forms:/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/FORMS/instances/forms1:/home/oracle/idu/src/template:/home/oracle/idu/sql/lib:/home/oracle/idu/menu
+export ORACLE_HOME=/home/oracle/Oracle/Middleware/Oracle_Home
+
+
+
+LD_LIBRARY_PATH=$MW_HOME/Oracle_Home/lib
+
+ . ~/fr11g.env
+
+/home/oracle/Oracle/Middleware/Oracle_Home/forms/templates/scripts/frmcmp.sh module=lib_utilidades.pll module_type=library userid=OW_VALPROD/OW_VALPROD@DESA Compile_All=yes
+
+/home/oracle/Oracle/Middleware/Oracle_Home/bin/frmcmp module= /home/oracle/idu/sql/lib/lib_utilidades.pll module_type=library userid=OW_VALPROD/OW_VALPROD@DESA Compile_All=yes
+/home/oracle/Oracle/Middleware/Oracle_Home/bin/frmcmp userid=OW_VALPROD/OW_VALPROD@DESA module_type=library Compile_All=yes module=/home/oracle/idu/sql/lib/lib_utilidades.pll
+
+./Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties
+rep_wls_reports_weblogic12c
+http://192.168.3.167:9002/reports/rwservlet/showjobs
+/home/oracle/Oracle/Middleware/Oracle_Home/bin/rwserver.sh server=rep_wls_reports_weblogic12c
+$ORACLE_HOME/bin/rwserver "$@" | tee -a reports.log
+/home/oracle/Oracle/Middleware/Oracle_Home/bin/rwserver "server=rep_wls_reports_weblogic12c" | tee -a reports.log
+
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent/
+
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/bin/startComponent.sh rep_wls_reports_weblogic12c
+
+cp ./Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties ./Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties.old
+vi ./Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwservlet.properties
+<webcommandaccess>L2</webcommandaccess>
+
+cp ./Middleware/Oracle_Home/reports/conf/rwservlet.properties ./Middleware/Oracle_Home/reports/conf/rwservlet.properties.old
+vi ./Middleware/Oracle_Home/reports/conf/rwservlet.properties 
+ <server>rep_wls_reports_weblogic12c</server>
+
+cp /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwserver.conf /home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration/rwserver.conf.old
+
+
+
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain     /config/fmwconfig/servers/WLS_REPORTS/applications/reports_12.2.1/configuration
+/mnt/wl-server     /Middleware            /user_projects/domains/ClassicDomain/config/fmwconfig/servers/WLS_REPORTS/applications/reports_11.1.2/configuration
+
+/mnt/wl-server/     Middleware/asinst_1/                                  config/                     ReportsServerComponent/RptSvr_weblogic_asinst_1
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/config/fmwconfig/components/ReportsServerComponent
+
+/home/oracle/Oracle/Middleware/Oracle_Home/oracle_common/lib/ons.jar
+cp ./Oracle/Middleware/Oracle_Home/bin/reports.sh ./Oracle/Middleware/Oracle_Home/bin/reports.sh.old
+vi ./Oracle/Middleware/Oracle_Home/bin/reports.sh
+REPORTS_CLASSPATH=/home/oracle/Oracle/Middleware/Oracle_Home/oracle_common/lib/ons.jar:${ORACLE_HOME}/reports/jlib/rwbuilder.jar:${ORACLE_HOME}/reports/jlib/rwrun.jar:${ORACLE_HOME}/jlib/zrclient.jar; export REPORTS_CLASSPATH
+
+vi ./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/WLS_REPORTS/logs/reports/rwservlet_diagnostic.log
+
+
+
+
+
+
+
+
+./Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/reports/bin/namingservice.sh 14021
+
+
+
+LOGS
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/logs/AdminServer.log
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/servers/AdminServer/logs/access.log
+/home/oracle/Oracle/Middleware/Oracle_Home/user_projects/domains/FRdomain/dms.log
