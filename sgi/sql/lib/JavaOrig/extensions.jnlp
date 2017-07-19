@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <jnlp spec="1.0+"
+		codebase="/forms/java/" href="extensions.jnlp">
+ <information>
+	<title>Oracle Forms Services Extensions</title>
+	<vendor>Oracle Corporation</vendor>
+ </information>
+	<security>
+		<all-permissions/>
+	</security>
+<resources>
+<!-- <jar href="ADD YOUR JARS HERE - ONLY ONE PER ENTRY"/> -->
+ <jar href="icons.jar"/> 
+</resources>
+ <component-desc/>
+</jnlp> 
+
